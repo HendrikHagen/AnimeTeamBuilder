@@ -1,0 +1,431 @@
+/* ═══════════════════════════════════════════════════════════
+   One Piece – Random Team Builder (2 Spieler)
+   style.css
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Design-Tokens ─────────────────────────────────────────── */
+:root {
+  --bg:           #0d1117;
+  --surface:      #161b22;
+  --surface-alt:  #1f2733;
+  --border:       #30363d;
+  --text:         #e6edf3;
+  --text-muted:   #8b949e;
+  --primary:      #d4a017;       /* Strohhut-Gold */
+  --primary-dark: #a87c0e;
+
+  /* Spieler-Akzentfarben */
+  --p1:           #d4a017;       /* Gold  – Spieler 1 */
+  --p2:           #3eb8d4;       /* Teal  – Spieler 2 */
+
+  /* Rollen-Farben */
+  --role-captain:     #e05252;
+  --role-vicecaptain: #5294e0;
+  --role-healer:      #52c46a;
+  --role-tank:        #a052c4;
+
+  --radius: 10px;
+  --shadow: 0 2px 12px rgba(0,0,0,0.4);
+}
+
+/* ── Reset & Basis ──────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding: 0 0 3rem;
+}
+
+/* ── Header ─────────────────────────────────────────────────── */
+header {
+  background: linear-gradient(135deg, #1a0a00 0%, #2d1700 50%, #1a0a00 100%);
+  border-bottom: 2px solid var(--primary);
+  text-align: center;
+  padding: 1.5rem 1rem 1.2rem;
+}
+
+header h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  color: var(--primary);
+  letter-spacing: 0.04em;
+  text-shadow: 0 0 20px rgba(212,160,23,0.4);
+}
+
+header .subtitle {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-top: 0.2rem;
+}
+
+/* ── Main-Layout ─────────────────────────────────────────────── */
+main {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* ── Sections ───────────────────────────────────────────────── */
+section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.4rem;
+  box-shadow: var(--shadow);
+}
+
+section.hidden {
+  display: none;
+}
+
+section h3 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+/* ── Zwei-Spieler-Spalten ────────────────────────────────────── */
+.player-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.player-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Spieler-Header */
+.player-header {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  padding: 0.3rem 0.6rem;
+  border-radius: 6px;
+  text-align: center;
+}
+
+.p1-accent {
+  background: rgba(212, 160, 23, 0.12);
+  color: var(--p1);
+  border: 1px solid rgba(212, 160, 23, 0.3);
+}
+
+.p2-accent {
+  background: rgba(62, 184, 212, 0.12);
+  color: var(--p2);
+  border: 1px solid rgba(62, 184, 212, 0.3);
+}
+
+/* ── Turn-Indikator ──────────────────────────────────────────── */
+#turn-indicator {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius);
+  margin-bottom: 1rem;
+  letter-spacing: 0.04em;
+}
+
+#turn-indicator[data-player="player1"] {
+  background: rgba(212, 160, 23, 0.12);
+  color: var(--p1);
+  border: 1px solid rgba(212, 160, 23, 0.35);
+}
+
+#turn-indicator[data-player="player2"] {
+  background: rgba(62, 184, 212, 0.12);
+  color: var(--p2);
+  border: 1px solid rgba(62, 184, 212, 0.35);
+}
+
+/* ── Inaktive Spieler-Spalte ─────────────────────────────────── */
+.player-col.col-inactive {
+  opacity: 0.35;
+  pointer-events: none;  /* verhindert alle Klicks, auch programmatisch nicht deaktivierte */
+}
+
+/* ── Buttons (allgemein) ─────────────────────────────────────── */
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: inherit;
+  font-weight: 600;
+  transition: background 0.15s, filter 0.15s, transform 0.1s, opacity 0.15s;
+}
+
+button:active {
+  transform: scale(0.97);
+}
+
+button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* ── Zieh-Button ─────────────────────────────────────────────── */
+#btn-draw {
+  width: 100%;
+  background: var(--primary);
+  color: #000;
+  padding: 0.85rem 1.5rem;
+  font-size: 1.05rem;
+}
+
+#btn-draw:hover:not(:disabled) {
+  background: var(--primary-dark);
+}
+
+/* ── Charakter-Karte ─────────────────────────────────────────── */
+.card {
+  margin-top: 1.2rem;
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.card.hidden {
+  display: none;
+}
+
+.card-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+#char-image-wrap {
+  flex-shrink: 0;
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#char-image-wrap.no-image {
+  font-size: 2rem;
+  color: var(--text-muted);
+}
+
+#char-image-wrap.no-image::after {
+  content: "?";
+}
+
+#char-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+#char-info {
+  flex: 1;
+  min-width: 0;
+}
+
+#char-name {
+  font-size: 1.2rem;
+  color: var(--primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-top: 0.15rem;
+}
+
+.meta.arc {
+  font-style: italic;
+}
+
+/* ── Rollen-Buttons ──────────────────────────────────────────── */
+.role-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.btn-role {
+  width: 100%;
+  padding: 0.6rem 0.5rem;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  color: #fff;
+  text-align: left;
+}
+
+.btn-role[data-role="captain"]    { background: var(--role-captain); }
+.btn-role[data-role="viceCaptain"]{ background: var(--role-vicecaptain); }
+.btn-role[data-role="healer"]     { background: var(--role-healer); color: #000; }
+.btn-role[data-role="tank"]       { background: var(--role-tank); }
+
+.btn-role:hover:not(:disabled) {
+  filter: brightness(1.15);
+}
+
+/* Gesperrte Rolle: bereits vergeben, nicht überschreibbar */
+.btn-role.locked {
+  position: relative;
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.btn-role.locked::after {
+  content: " ✓";
+  font-size: 0.8em;
+  opacity: 0.9;
+}
+
+/* Spieler-2-Buttons leicht abgedunkelt um Unterschied anzuzeigen */
+#col-player2 .btn-role:not(.locked) {
+  filter: brightness(0.88) saturate(0.85);
+}
+
+#col-player2 .btn-role:hover:not(:disabled):not(.locked) {
+  filter: brightness(1.05);
+}
+
+/* ── Team-Grid ───────────────────────────────────────────────── */
+.team-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.team-slot {
+  background: var(--surface-alt);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  transition: border-color 0.2s;
+}
+
+.team-slot.filled {
+  border-color: var(--primary);
+}
+
+/* Spieler-2-Slots mit Teal-Akzent wenn befüllt */
+#slot-p2-captain.filled,
+#slot-p2-viceCaptain.filled,
+#slot-p2-healer.filled,
+#slot-p2-tank.filled {
+  border-color: var(--p2);
+}
+
+.slot-label {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--text-muted);
+}
+
+/* Slot-Label-Farben je Rolle */
+.team-slot[id*="captain"]    .slot-label { color: var(--role-captain); }
+.team-slot[id*="viceCaptain"] .slot-label { color: var(--role-vicecaptain); }
+.team-slot[id*="healer"]     .slot-label { color: var(--role-healer); }
+.team-slot[id*="tank"]       .slot-label { color: var(--role-tank); }
+
+.slot-value {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.slot-value.empty {
+  color: var(--text-muted);
+  font-weight: 400;
+  font-style: italic;
+}
+
+/* ── Reset-Button ────────────────────────────────────────────── */
+#controls {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+}
+
+#btn-reset {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  font-weight: 400;
+}
+
+#btn-reset:hover {
+  border-color: var(--text-muted);
+  color: var(--text);
+}
+
+/* ── Status-Bereich ──────────────────────────────────────────── */
+#status {
+  text-align: center;
+  font-size: 0.875rem;
+  color: var(--primary);
+  min-height: 1.4em;
+  opacity: 1;
+  transition: opacity 0.4s;
+}
+
+#status.fade {
+  opacity: 0;
+}
+
+/* ── Mobile (<600px) ─────────────────────────────────────────── */
+@media (max-width: 600px) {
+  .player-columns {
+    grid-template-columns: 1fr;
+  }
+
+  #char-image-wrap {
+    width: 56px;
+    height: 56px;
+  }
+
+  /* Rollen-Buttons auf Mobile nebeneinander im 2er-Grid */
+  .role-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem;
+  }
+}

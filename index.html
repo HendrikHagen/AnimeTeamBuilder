@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>One Piece – Random Team Builder</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>&#9875; One Piece</h1>
+    <p class="subtitle">Random Team Builder – 2 Spieler</p>
+  </header>
+
+  <main>
+
+    <!-- ── 1. Zufallsgenerator ─────────────────────────────── -->
+    <section id="draw-section">
+      <button id="btn-draw">Zufälligen Charakter ziehen</button>
+
+      <div id="character-card" class="card hidden">
+        <div class="card-body">
+          <div id="char-image-wrap">
+            <img id="char-image" src="" alt="" />
+          </div>
+          <div id="char-info">
+            <h2 id="char-name">–</h2>
+            <p id="char-alias" class="meta"></p>
+            <p id="char-faction" class="meta"></p>
+            <p id="char-arc" class="meta arc"></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. Rolle zuweisen (beide Spieler) ──────────────── -->
+    <section id="role-section" class="hidden">
+      <div id="turn-indicator" aria-live="polite"></div>
+      <div class="player-columns">
+
+        <div class="player-col" id="col-player1">
+          <div class="player-header p1-accent">Spieler 1</div>
+          <div class="role-buttons">
+            <button class="btn-role" data-player="player1" data-role="captain">&#9818; Kapitän</button>
+            <button class="btn-role" data-player="player1" data-role="viceCaptain">&#9819; Vize-Kapitän</button>
+            <button class="btn-role" data-player="player1" data-role="healer">&#10010; Heiler</button>
+            <button class="btn-role" data-player="player1" data-role="tank">&#9876; Tank</button>
+          </div>
+        </div>
+
+        <div class="player-col" id="col-player2">
+          <div class="player-header p2-accent">Spieler 2</div>
+          <div class="role-buttons">
+            <button class="btn-role" data-player="player2" data-role="captain">&#9818; Kapitän</button>
+            <button class="btn-role" data-player="player2" data-role="viceCaptain">&#9819; Vize-Kapitän</button>
+            <button class="btn-role" data-player="player2" data-role="healer">&#10010; Heiler</button>
+            <button class="btn-role" data-player="player2" data-role="tank">&#9876; Tank</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 3. Aktuelle Teams ───────────────────────────────── -->
+    <section id="team-section">
+      <h3>Aktuelle Teams</h3>
+      <div class="player-columns">
+
+        <!-- Spieler 1 -->
+        <div class="player-col">
+          <div class="player-header p1-accent">Spieler 1</div>
+          <div class="team-grid">
+            <div class="team-slot" id="slot-p1-captain">
+              <span class="slot-label">&#9818; Kapitän</span>
+              <span class="slot-value empty" id="team-p1-captain">–</span>
+            </div>
+            <div class="team-slot" id="slot-p1-viceCaptain">
+              <span class="slot-label">&#9819; Vize-Kapitän</span>
+              <span class="slot-value empty" id="team-p1-viceCaptain">–</span>
+            </div>
+            <div class="team-slot" id="slot-p1-healer">
+              <span class="slot-label">&#10010; Heiler</span>
+              <span class="slot-value empty" id="team-p1-healer">–</span>
+            </div>
+            <div class="team-slot" id="slot-p1-tank">
+              <span class="slot-label">&#9876; Tank</span>
+              <span class="slot-value empty" id="team-p1-tank">–</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Spieler 2 -->
+        <div class="player-col">
+          <div class="player-header p2-accent">Spieler 2</div>
+          <div class="team-grid">
+            <div class="team-slot" id="slot-p2-captain">
+              <span class="slot-label">&#9818; Kapitän</span>
+              <span class="slot-value empty" id="team-p2-captain">–</span>
+            </div>
+            <div class="team-slot" id="slot-p2-viceCaptain">
+              <span class="slot-label">&#9819; Vize-Kapitän</span>
+              <span class="slot-value empty" id="team-p2-viceCaptain">–</span>
+            </div>
+            <div class="team-slot" id="slot-p2-healer">
+              <span class="slot-label">&#10010; Heiler</span>
+              <span class="slot-value empty" id="team-p2-healer">–</span>
+            </div>
+            <div class="team-slot" id="slot-p2-tank">
+              <span class="slot-label">&#9876; Tank</span>
+              <span class="slot-value empty" id="team-p2-tank">–</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── 4. Steuerung ────────────────────────────────────── -->
+    <section id="controls">
+      <button id="btn-reset">Runde zurücksetzen</button>
+    </section>
+
+    <!-- ── 5. Statusmeldung ───────────────────────────────── -->
+    <div id="status" aria-live="polite"></div>
+
+  </main>
+
+  <script src="characters.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
