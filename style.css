@@ -23,6 +23,8 @@
   --role-vicecaptain: #5294e0;
   --role-healer:      #52c46a;
   --role-tank:        #a052c4;
+  --role-support:     #e08c20;
+  --role-traitor:     #c43030;
 
   --radius: 10px;
   --shadow: 0 2px 12px rgba(0,0,0,0.4);
@@ -289,6 +291,8 @@ button:disabled {
 .btn-role[data-role="viceCaptain"]{ background: var(--role-vicecaptain); }
 .btn-role[data-role="healer"]     { background: var(--role-healer); color: #000; }
 .btn-role[data-role="tank"]       { background: var(--role-tank); }
+.btn-role[data-role="support"]    { background: var(--role-support); color: #000; }
+.btn-role[data-role="traitor"]    { background: var(--role-traitor); }
 
 .btn-role:hover:not(:disabled) {
   filter: brightness(1.15);
@@ -342,7 +346,9 @@ button:disabled {
 #slot-p2-captain.filled,
 #slot-p2-viceCaptain.filled,
 #slot-p2-healer.filled,
-#slot-p2-tank.filled {
+#slot-p2-tank.filled,
+#slot-p2-support.filled,
+#slot-p2-traitor.filled {
   border-color: var(--p2);
 }
 
@@ -354,10 +360,12 @@ button:disabled {
 }
 
 /* Slot-Label-Farben je Rolle */
-.team-slot[id*="captain"]    .slot-label { color: var(--role-captain); }
+.team-slot[id*="captain"]     .slot-label { color: var(--role-captain); }
 .team-slot[id*="viceCaptain"] .slot-label { color: var(--role-vicecaptain); }
-.team-slot[id*="healer"]     .slot-label { color: var(--role-healer); }
-.team-slot[id*="tank"]       .slot-label { color: var(--role-tank); }
+.team-slot[id*="healer"]      .slot-label { color: var(--role-healer); }
+.team-slot[id*="tank"]        .slot-label { color: var(--role-tank); }
+.team-slot[id*="support"]     .slot-label { color: var(--role-support); }
+.team-slot[id*="traitor"]     .slot-label { color: var(--role-traitor); }
 
 .slot-value {
   font-size: 0.875rem;
