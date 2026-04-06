@@ -20,8 +20,8 @@ const state = {
   currentCharacter: null,   // aktuell gezogener Charakter
   currentTurn: "player1",   // wer darf gerade zuweisen: "player1" | "player2"
   teams: {
-    player1: { captain: null, viceCaptain: null, healer: null, tank: null },
-    player2: { captain: null, viceCaptain: null, healer: null, tank: null },
+    player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
+    player2: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
   },
 };
 
@@ -51,12 +51,16 @@ const elTeamSlots = {
     viceCaptain: document.getElementById("team-p1-viceCaptain"),
     healer:      document.getElementById("team-p1-healer"),
     tank:        document.getElementById("team-p1-tank"),
+    support:     document.getElementById("team-p1-support"),
+    traitor:     document.getElementById("team-p1-traitor"),
   },
   player2: {
     captain:     document.getElementById("team-p2-captain"),
     viceCaptain: document.getElementById("team-p2-viceCaptain"),
     healer:      document.getElementById("team-p2-healer"),
     tank:        document.getElementById("team-p2-tank"),
+    support:     document.getElementById("team-p2-support"),
+    traitor:     document.getElementById("team-p2-traitor"),
   },
 };
 
@@ -67,12 +71,16 @@ const elSlotContainers = {
     viceCaptain: document.getElementById("slot-p1-viceCaptain"),
     healer:      document.getElementById("slot-p1-healer"),
     tank:        document.getElementById("slot-p1-tank"),
+    support:     document.getElementById("slot-p1-support"),
+    traitor:     document.getElementById("slot-p1-traitor"),
   },
   player2: {
     captain:     document.getElementById("slot-p2-captain"),
     viceCaptain: document.getElementById("slot-p2-viceCaptain"),
     healer:      document.getElementById("slot-p2-healer"),
     tank:        document.getElementById("slot-p2-tank"),
+    support:     document.getElementById("slot-p2-support"),
+    traitor:     document.getElementById("slot-p2-traitor"),
   },
 };
 
@@ -142,7 +150,7 @@ function drawRandomCharacter() {
  *  - Nach erfolgreicher Zuweisung wechselt der Zug.
  *
  * @param {string} player - "player1" | "player2"
- * @param {string} role   - "captain" | "viceCaptain" | "healer" | "tank"
+ * @param {string} role   - "captain" | "viceCaptain" | "healer" | "tank" | "support" | "traitor"
  */
 function assignRole(player, role) {
   if (!state.currentCharacter) {
@@ -196,8 +204,8 @@ function resetRound(silent = false) {
   state.currentTurn         = "player1";
   state.availableCharacters = [...state.allCharacters];
   state.teams = {
-    player1: { captain: null, viceCaptain: null, healer: null, tank: null },
-    player2: { captain: null, viceCaptain: null, healer: null, tank: null },
+    player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
+    player2: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
   };
 
   renderCurrentCharacter();
@@ -283,7 +291,7 @@ function renderRoleSection() {
  */
 function renderTeams() {
   ["player1", "player2"].forEach((player) => {
-    ["captain", "viceCaptain", "healer", "tank"].forEach((role) => {
+    ["captain", "viceCaptain", "healer", "tank", "support", "traitor"].forEach((role) => {
       const char      = state.teams[player][role];
       const el        = elTeamSlots[player][role];
       const container = elSlotContainers[player][role];
@@ -334,6 +342,8 @@ function getRoleLabel(role) {
     viceCaptain: "Vize-Kapitän",
     healer:      "Heiler",
     tank:        "Tank",
+    support:     "Support",
+    traitor:     "Verräter",
   };
   return labels[role] || role;
 }
