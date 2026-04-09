@@ -24,6 +24,10 @@ const state = {
   availableCharacters: [],  // gemeinsamer Pool
   currentCharacter: null,   // aktuell gezogener Charakter
   currentTurn: "player1",   // wer darf gerade zuweisen: "player1" | "player2"
+  jokerAvailable: {
+    player1: true,
+    player2: true,
+  },
   teams: {
     player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
     player2: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
@@ -54,6 +58,10 @@ const elStatus        = document.getElementById("status");
 const elRoleSection   = document.getElementById("role-section");
 const elTurnIndicator = document.getElementById("turn-indicator");
 const elTeamWinnerBanner = document.getElementById("team-winner-banner");
+const elJokerButtons = {
+  player1: document.getElementById("btn-joker-player1"),
+  player2: document.getElementById("btn-joker-player2"),
+};
 
 const elRoleButtons   = document.querySelectorAll(".btn-role");
 
@@ -111,153 +119,6 @@ const ADVANCED_RANK = "advanced";
 const BASIC_RANK = "basic";
 const NOOB_RANK = "noob";
 
-const RANK_POWER_TARGETS = {
-  [LEGENDARY_RANK]: { center: 930, spread: 75, min: 850, max: 1000 },
-  [EPIC_RANK]: { center: 775, spread: 65, min: 700, max: 849 },
-  [ELITE_RANK]: { center: 620, spread: 65, min: 550, max: 699 },
-  [ADVANCED_RANK]: { center: 440, spread: 85, min: 350, max: 549 },
-  [BASIC_RANK]: { center: 265, spread: 80, min: 180, max: 349 },
-  [NOOB_RANK]: { center: 95, spread: 80, min: 0, max: 179 },
-};
-
-const MANUAL_RANK_OVERRIDES = new Map([
-  ["onepiece-0154", ELITE_RANK],      // Sentomaru (letzte Angabe)
-  ["onepiece-0184", BASIC_RANK],      // Monet
-  ["onepiece-0183", ADVANCED_RANK],   // Caesar Clown
-  ["onepiece-0072", BASIC_RANK],      // Mr. 3
-  ["onepiece-0041", NOOB_RANK],       // Chimney
-  ["onepiece-0162", ELITE_RANK],      // Magellan
-  ["onepiece-0168", ELITE_RANK],      // Jozu
-  ["onepiece-0149", LEGENDARY_RANK],  // Silvers Rayleigh
-  ["onepiece-0189", ELITE_RANK],      // Bartolomeo
-  ["onepiece-0122", ELITE_RANK],      // Rob Lucci
-  ["onepiece-0078", ADVANCED_RANK],   // Mr. 1
-  ["onepiece-0010", ADVANCED_RANK],   // Buggy
-  ["onepiece-0043", ELITE_RANK],      // Coby
-  ["onepiece-0049", BASIC_RANK],      // Morgan
-  ["onepiece-0167", ADVANCED_RANK],   // Inazuma
-  ["onepiece-0028", BASIC_RANK],      // Mr. 9
-  ["onepiece-0185", ADVANCED_RANK],   // Vergo
-  ["onepiece-0169", ELITE_RANK],      // Vista
-  ["onepiece-0166", BASIC_RANK],      // Sadi
-  ["onepiece-0170", EPIC_RANK],       // Donquixote Doflamingo
-  ["onepiece-0052", ELITE_RANK],      // Yasopp
-  ["onepiece-0195", ELITE_RANK],      // Jack
-  ["onepiece-0131", ELITE_RANK],      // Basil Hawkins
-  ["onepiece-0031", BASIC_RANK],      // Wapol
-  ["onepiece-0203", ELITE_RANK],      // Dr. Vegapunk
-  ["onepiece-0047", ADVANCED_RANK],   // Bon Clay
-  ["onepiece-0157", EPIC_RANK],       // Boa Hancock
-  ["onepiece-0046", ELITE_RANK],      // Crocodile
-  ["onepiece-0163", BASIC_RANK],      // Hannyabal
-  ["onepiece-0181", ELITE_RANK],      // Fisher Tiger
-  ["onepiece-0088", LEGENDARY_RANK],  // Marshall D. Teach
-  ["onepiece-0200", ELITE_RANK],      // Yamato
-  ["onepiece-0074", ELITE_RANK],      // Dorry
-  ["onepiece-0092", ELITE_RANK],      // Stronger
-  ["onepiece-0140", ELITE_RANK],      // Emporio Ivankov
-  ["onepiece-0089", ELITE_RANK],      // Jesus Burgess
-  ["onepiece-0023", ADVANCED_RANK],   // Helmeppo
-  ["onepiece-0187", ELITE_RANK],      // Kozuki Momonosuke
-  ["onepiece-0077", BASIC_RANK],      // Dr. Hiluluk
-  ["onepiece-0164", ELITE_RANK],      // Shiryu
-  ["onepiece-0123", ADVANCED_RANK],   // Blueno
-  ["onepiece-0126", BASIC_RANK],      // Yokozuna
-  ["onepiece-0022", ADVANCED_RANK],   // Tashigi
-  ["onepiece-0093", ADVANCED_RANK],   // Lafitte
-  ["onepiece-0120", BASIC_RANK],      // Paulie
-  ["onepiece-0059", BASIC_RANK],      // Merry
-  ["onepiece-0033", BASIC_RANK],      // Pell
-  ["onepiece-0051", ELITE_RANK],      // Lucky Roux
-  ["onepiece-0099", ELITE_RANK],      // Enel
-  ["onepiece-0076", BASIC_RANK],      // Dr. Kureha
-]);
-
-const LEGENDARY_CHARACTER_IDS = new Set([
-  "onepiece-0001", // Monkey D. Luffy
-  "onepiece-0044", // Shanks
-  "onepiece-0045", // Dracule Mihawk
-  "onepiece-0054", // Monkey D. Dragon
-  "onepiece-0055", // Gol D. Roger
-  "onepiece-0094", // Sengoku
-  "onepiece-0095", // Edward Newgate
-  "onepiece-0130", // Monkey D. Garp
-  "onepiece-0196", // Charlotte Linlin
-  "onepiece-0199", // Kaido
-]);
-
-const EPIC_CHARACTER_IDS = new Set([
-  "onepiece-0002", // Roronoa Zoro
-  "onepiece-0005", // Sanji
-  "onepiece-0037", // Rob Lucci
-  "onepiece-0042", // Trafalgar Law
-  "onepiece-0048", // Portgas D. Ace
-  "onepiece-0050", // Silvers Rayleigh
-  "onepiece-0059", // Arlong
-  "onepiece-0077", // Donquixote Doflamingo
-  "onepiece-0096", // Marco
-  "onepiece-0121", // Aokiji
-  "onepiece-0123", // Kizaru
-  "onepiece-0126", // Akainu
-  "onepiece-0141", // Boa Hancock
-  "onepiece-0139", // Bartholomew Kuma
-  "onepiece-0142", // Eustass Kid
-  "onepiece-0146", // X Drake
-  "onepiece-0172", // Sabo
-  "onepiece-0193", // Admiral Fujitora
-  "onepiece-0197", // Charlotte Katakuri
-  "onepiece-0201", // King
-]);
-
-const ELITE_CHARACTER_IDS = new Set([
-  "onepiece-0003", // Nami
-  "onepiece-0004", // Usopp
-  "onepiece-0006", // Tony Tony Chopper
-  "onepiece-0007", // Nico Robin
-  "onepiece-0008", // Franky
-  "onepiece-0009", // Brook
-  "onepiece-0041", // Enel
-  "onepiece-0047", // Nico Robin (2. Eintrag)
-  "onepiece-0049", // Smoker
-  "onepiece-0050", // Tashigi
-  "onepiece-0143", // Killer
-  "onepiece-0144", // Capone Bege
-  "onepiece-0145", // Scratchmen Apoo
-]);
-
-const ADVANCED_CHARACTER_IDS = new Set([
-  "onepiece-0136", // Oars (vorher "Standard" gewünscht)
-  "onepiece-0186", // Kin'emon (vorher "Standard" gewünscht)
-  "onepiece-0195", // Jack
-  "onepiece-0200", // Yamato
-]);
-
-const BASIC_CHARACTER_IDS = new Set([
-  "onepiece-0011", // Cabaji
-  "onepiece-0012", // Mohji
-  "onepiece-0023", // Helmeppo
-  "onepiece-0051", // Makino
-  "onepiece-0052", // Woop Slap
-  "onepiece-0171", // Curly Dadan
-  "onepiece-0198", // Charlotte Pudding
-]);
-
-const NOOB_CHARACTER_IDS = new Set([
-  "onepiece-0014", // Kaya
-  "onepiece-0017", // Patty
-  "onepiece-0018", // Carne
-  "onepiece-0032", // Dalton
-  "onepiece-0051", // Makino
-  "onepiece-0052", // Woop Slap
-  "onepiece-0053", // Curly Dadan
-  "onepiece-0056", // Richie
-  "onepiece-0067", // Oimo
-  "onepiece-0068", // Kashii
-  "onepiece-0116", // Kokoro
-  "onepiece-0161", // Haredas
-  "onepiece-0198", // Charlotte Pudding
-]);
-
 // ═══════════════════════════════════════════════════════════════
 // INITIALISIERUNG
 // ═══════════════════════════════════════════════════════════════
@@ -269,7 +130,15 @@ function init() {
     return;
   }
 
-  state.allCharacters = CHARACTERS.map(enrichCharacter);
+  try {
+    state.allCharacters = CHARACTERS.map(enrichCharacter);
+  } catch (error) {
+    console.error("Fehler beim Laden der Charakterdaten:", error);
+    showStatus(`Fehler in characters.js: ${error.message}`);
+    elBtnDraw.disabled = true;
+    return;
+  }
+
   resetRound(/* silent */ true);
 
   elBtnDraw.addEventListener("click", drawRandomCharacter);
@@ -277,6 +146,11 @@ function init() {
 
   elRoleButtons.forEach((btn) => {
     btn.addEventListener("click", () => assignRole(btn.dataset.player, btn.dataset.role));
+  });
+
+  Object.entries(elJokerButtons).forEach(([player, button]) => {
+    if (!button) return;
+    button.addEventListener("click", () => useJoker(player));
   });
 }
 
@@ -292,6 +166,17 @@ function init() {
  * → Sperre deaktivieren: `const pool = state.allCharacters;`
  */
 function drawRandomCharacter() {
+  if (isRoundComplete()) {
+    showStatus("Die Runde ist beendet. Bitte zuerst zurücksetzen.");
+    updateDrawButtonState();
+    return;
+  }
+
+  if (state.currentCharacter) {
+    showStatus("Bitte zuerst eine Rolle auswählen oder den Joker einsetzen.");
+    return;
+  }
+
   const pool = state.availableCharacters; // ← Duplikat-Sperre aktiv
 
   if (pool.length === 0) {
@@ -306,8 +191,44 @@ function drawRandomCharacter() {
   renderCurrentCharacter();
   elRoleSection.classList.remove("hidden");
   renderRoleSection();
+  updateDrawButtonState();
   const rankPrefix = `[${formatRank(state.currentCharacter.rank).toUpperCase()}] `;
   showStatus(`${rankPrefix}„${state.currentCharacter.name}" gezogen.`);
+}
+
+function useJoker(player) {
+  if (player !== state.currentTurn) {
+    showStatus(`Bitte warten – ${getPlayerLabel(state.currentTurn)} ist dran.`);
+    return;
+  }
+
+  if (!state.currentCharacter) {
+    showStatus("Du kannst den Joker erst nach einem Draw einsetzen.");
+    return;
+  }
+
+  if (!state.jokerAvailable[player]) {
+    showStatus(`${getPlayerLabel(player)} hat den Joker bereits genutzt.`);
+    return;
+  }
+
+  const previousCharacterId = state.currentCharacter.id;
+  const nextCharacter = pickRandomCharacterFromPool(previousCharacterId);
+
+  if (!nextCharacter) {
+    showStatus("Kein alternativer Charakter für den Joker verfügbar.");
+    return;
+  }
+
+  state.jokerAvailable[player] = false;
+  state.currentCharacter = nextCharacter;
+
+  renderCurrentCharacter();
+  renderRoleSection();
+  updateDrawButtonState();
+
+  const rankPrefix = `[${formatRank(nextCharacter.rank).toUpperCase()}] `;
+  showStatus(`${getPlayerLabel(player)} setzt den Joker ein: ${rankPrefix}„${nextCharacter.name}".`);
 }
 
 /**
@@ -355,13 +276,13 @@ function assignRole(player, role) {
   // Zug wechseln
   state.currentTurn = player === "player1" ? "player2" : "player1";
 
-  // Staat aufräumen
+  // State aufräumen
   state.currentCharacter = null;
   renderCurrentCharacter();
   elRoleSection.classList.add("hidden");
   renderTeams();
 
-  elBtnDraw.disabled = state.availableCharacters.length === 0;
+  updateDrawButtonState();
 }
 
 /**
@@ -372,6 +293,10 @@ function assignRole(player, role) {
 function resetRound(silent = false) {
   state.currentCharacter    = null;
   state.currentTurn         = "player1";
+  state.jokerAvailable = {
+    player1: true,
+    player2: true,
+  };
   state.availableCharacters = [...state.allCharacters];
   state.teams = {
     player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
@@ -382,7 +307,7 @@ function resetRound(silent = false) {
   elRoleSection.classList.add("hidden");
   renderTeams();
   renderEvaluation();
-  elBtnDraw.disabled = false;
+  updateDrawButtonState();
 
   if (!silent) showStatus("Runde zurückgesetzt – Spieler 1 beginnt.");
 }
@@ -458,6 +383,20 @@ function renderRoleSection() {
       btn.classList.toggle("locked", isLocked);
     }
   });
+
+  ["player1", "player2"].forEach((player) => {
+    const jokerBtn = elJokerButtons[player];
+    if (!jokerBtn) return;
+
+    const isActivePlayer = player === active;
+    const hasCurrentCharacter = Boolean(state.currentCharacter);
+    const hasJoker = Boolean(state.jokerAvailable[player]);
+    const canRerollToDifferentChar = state.availableCharacters.length > 1;
+    const isUsable = isActivePlayer && hasCurrentCharacter && hasJoker && canRerollToDifferentChar;
+
+    jokerBtn.disabled = !isUsable;
+    jokerBtn.textContent = hasJoker ? "Joker einsetzen (1)" : "Joker verbraucht";
+  });
 }
 
 /**
@@ -490,17 +429,40 @@ function renderTeams() {
   renderEvaluation();
 }
 
+function pickRandomCharacterFromPool(excludeCharacterId = "") {
+  const pool = state.availableCharacters;
+  if (pool.length === 0) return null;
+
+  const candidates = excludeCharacterId && pool.length > 1
+    ? pool.filter((char) => char.id !== excludeCharacterId)
+    : pool;
+
+  if (candidates.length === 0) return null;
+  const index = Math.floor(Math.random() * candidates.length);
+  return candidates[index];
+}
+
+function updateDrawButtonState() {
+  const roundIsComplete = isRoundComplete();
+  const hasOpenCharacter = Boolean(state.currentCharacter);
+  const hasPoolEntries = state.availableCharacters.length > 0;
+  elBtnDraw.disabled = roundIsComplete || hasOpenCharacter || !hasPoolEntries;
+}
+
+function isRoundComplete() {
+  return isTeamComplete("player1") && isTeamComplete("player2");
+}
+
 // ═══════════════════════════════════════════════════════════════
 // BILD-FUNKTIONEN
 // ═══════════════════════════════════════════════════════════════
 
 function enrichCharacter(char) {
   const sourceMeta = getImageSourceMeta(char.id);
-  const rank = evaluateCharacterRank(char);
   return {
     ...char,
-    rank,
-    power: normalizeCharacterPower(char, rank),
+    rank: normalizeCharacterRank(char),
+    power: requireExplicitCharacterPower(char),
     roleBonuses: normalizeRoleBonuses(char.roleBonuses),
     image: char.image || "",
     imageSourceMeta: sourceMeta,
@@ -628,17 +590,22 @@ function setMeta(el, text) {
   el.style.display = text ? "" : "none";
 }
 
-function normalizeCharacterPower(char, rank) {
+function normalizeCharacterRank(char) {
+  const explicitRank = typeof char.rank === "string" ? char.rank.trim().toLowerCase() : "";
+  if (VALID_RANKS.has(explicitRank)) {
+    return explicitRank;
+  }
+
+  throw new Error(`Ungültiger oder fehlender Rank für ${char.name || char.id || "unbekannten Charakter"}.`);
+}
+
+function requireExplicitCharacterPower(char) {
   const explicitPower = Number(char.power);
   if (Number.isFinite(explicitPower)) {
     return clampPower(explicitPower);
   }
 
-  const target = RANK_POWER_TARGETS[rank] || RANK_POWER_TARGETS[BASIC_RANK];
-  const seed = deterministicSeedFromString(char.id || char.name || "");
-  const offsetSpan = target.spread * 2 + 1;
-  const offset = (seed % offsetSpan) - target.spread;
-  return clampPower(Math.max(target.min, Math.min(target.max, target.center + offset)));
+  throw new Error(`Fehlende oder ungültige Power für ${char.name || char.id || "unbekannten Charakter"}.`);
 }
 
 function normalizeRoleBonuses(rawBonuses) {
@@ -653,15 +620,6 @@ function normalizeRoleBonuses(rawBonuses) {
   });
 
   return normalized;
-}
-
-function deterministicSeedFromString(input) {
-  const text = String(input || "");
-  let hash = 0;
-  for (let i = 0; i < text.length; i += 1) {
-    hash = ((hash << 5) - hash + text.charCodeAt(i)) | 0;
-  }
-  return Math.abs(hash);
 }
 
 function clampPower(value) {
@@ -776,72 +734,6 @@ function getRankSymbol(rank) {
     [NOOB_RANK]: "☠",
   };
   return symbols[rank] || "";
-}
-
-function evaluateCharacterRank(char) {
-  const explicitRank = typeof char.rank === "string" ? char.rank.trim().toLowerCase() : "";
-  if (VALID_RANKS.has(explicitRank)) {
-    return explicitRank;
-  }
-
-  if (MANUAL_RANK_OVERRIDES.has(char.id)) {
-    return MANUAL_RANK_OVERRIDES.get(char.id);
-  }
-
-  if (LEGENDARY_CHARACTER_IDS.has(char.id)) return LEGENDARY_RANK;
-  if (EPIC_CHARACTER_IDS.has(char.id)) return EPIC_RANK;
-  if (ELITE_CHARACTER_IDS.has(char.id)) return ELITE_RANK;
-  if (ADVANCED_CHARACTER_IDS.has(char.id)) return ADVANCED_RANK;
-  if (BASIC_CHARACTER_IDS.has(char.id)) return BASIC_RANK;
-  if (NOOB_CHARACTER_IDS.has(char.id)) return NOOB_RANK;
-
-  const tags = Array.isArray(char.tags)
-    ? new Set(char.tags.map((tag) => String(tag).toLowerCase()))
-    : new Set();
-
-  const faction = String(char.faction || "").toLowerCase();
-  const alias = String(char.alias || "").toLowerCase();
-
-  let score = 0;
-
-  if (tags.has("yonkou")) score += 6;
-  if (tags.has("admiral")) score += 5;
-  if (tags.has("legende")) score += 5;
-  if (tags.has("kapitän")) score += 3;
-  if (tags.has("sieben-samurai")) score += 3;
-  if (tags.has("supernovae")) score += 2;
-  if (tags.has("hauptcharakter")) score += 2;
-  if (tags.has("cp9")) score += 1;
-  if (tags.has("revolution")) score += 3;
-  if (tags.has("marine")) score += 1;
-  if (tags.has("weltregierung")) score += 1;
-  if (tags.has("samurai")) score += 2;
-  if (tags.has("wano")) score += 1;
-  if (tags.has("royalität")) score += 1;
-  if (tags.has("riese")) score += 1;
-
-  if (faction.includes("roger")) score += 3;
-  if (faction.includes("whitebeard")) score += 3;
-  if (faction.includes("beasts pirates")) score += 2;
-  if (faction.includes("big mom")) score += 2;
-  if (faction.includes("marine") && tags.has("admiral")) score += 2;
-
-  if (alias.includes("piratenkönig") || alias.includes("buddha")) score += 3;
-  if (alias.includes("whitebeard") || alias.includes("könig der bestien")) score += 2;
-
-  // Schwächere Kategorien bekommen Minuspunkte und landen häufiger bei "noob".
-  if (tags.has("zivilist")) score -= 3;
-  if (tags.has("kind")) score -= 3;
-  if (tags.has("tier")) score -= 2;
-  if (tags.has("koch") && !tags.has("pirat")) score -= 1;
-  if (tags.size === 0) score -= 1;
-
-  if (score >= 8) return EPIC_RANK;
-  if (score >= 6) return ELITE_RANK;
-  if (score >= 4) return ADVANCED_RANK;
-  if (score >= 1) return BASIC_RANK;
-  if (score <= 0) return NOOB_RANK;
-  return BASIC_RANK;
 }
 
 let statusTimer = null;

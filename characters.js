@@ -16,14 +16,14 @@
  *     faction: "",           // Crew / Fraktion (optional)
  *     arc: "",               // Erster Arc / Zugehörigkeit (optional)
  *     image: "",             // Bild-URL (optional, kann leer bleiben)
- *     rank: "",              // z.B. "legendary" (optional)
- *     power: 0,               // Basis-Power 0-1000 (optional)
+ *     rank: "basic",         // Pflichtfeld: legendary | epic | elite | advanced | basic | noob
+ *     power: 250,             // Pflichtfeld: Basis-Power 0-1000
  *     roleBonuses: {},        // Rollen-Boni, z.B. { healer: 80, support: 40 } (optional)
  *     tags: []               // Stichworte wie "pirat", "marine", etc. (optional)
  *   }
  *
  * Fehlende optionale Felder können einfach als "" oder [] angegeben werden.
- * Die App crasht nicht, wenn Felder fehlen.
+ * Rank und Power werden nicht mehr implizit ergänzt und müssen direkt im Datensatz stehen.
  * ──────────────────────────────────────────────────────────────
  */
 
@@ -39,10 +39,10 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Romance Dawn",
     image: "",
+    rank: "legendary",
     power: 940,
     roleBonuses: { captain: 45 },
     tags: ["pirat", "kapitän", "hauptcharakter"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0002",
@@ -51,6 +51,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Romance Dawn",
     image: "",
+    rank: "epic",
+    power: 827,
     tags: ["pirat", "schwertkämpfer", "hauptcharakter"]
   },
   {
@@ -60,6 +62,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Orange Town",
     image: "",
+    rank: "elite",
+    power: 673,
     tags: ["pirat", "navigatorin", "hauptcharakter"]
   },
   {
@@ -69,6 +73,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Syrup Village",
     image: "",
+    rank: "elite",
+    power: 674,
     tags: ["pirat", "schütze", "hauptcharakter"]
   },
   {
@@ -78,6 +84,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Baratie",
     image: "",
+    rank: "epic",
+    power: 830,
     tags: ["pirat", "koch", "hauptcharakter"]
   },
   {
@@ -87,6 +95,7 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Drum Island",
     image: "",
+    rank: "elite",
     power: 620,
     roleBonuses: { healer: 120, support: 95 },
     tags: ["pirat", "arzt", "hauptcharakter"]
@@ -98,6 +107,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Arabasta",
     image: "",
+    rank: "elite",
+    power: 677,
     tags: ["pirat", "archäologin", "hauptcharakter"]
   },
   {
@@ -107,6 +118,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Water Seven",
     image: "",
+    rank: "elite",
+    power: 678,
     tags: ["pirat", "schreiner", "hauptcharakter"]
   },
   {
@@ -116,6 +129,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Thriller Bark",
     image: "",
+    rank: "elite",
+    power: 679,
     tags: ["pirat", "musiker", "hauptcharakter"]
   },
 
@@ -129,6 +144,8 @@ const CHARACTERS = [
     faction: "Buggy-Piraten",
     arc: "Orange Town",
     image: "",
+    rank: "advanced",
+    power: 414,
     roleBonuses: { traitor: 80, support: 20 },
     tags: ["pirat", "kapitän"]
   },
@@ -139,6 +156,8 @@ const CHARACTERS = [
     faction: "Buggy-Piraten",
     arc: "Orange Town",
     image: "",
+    rank: "basic",
+    power: 211,
     tags: ["pirat"]
   },
   {
@@ -148,6 +167,8 @@ const CHARACTERS = [
     faction: "Buggy-Piraten",
     arc: "Orange Town",
     image: "",
+    rank: "basic",
+    power: 212,
     tags: ["pirat"]
   },
 
@@ -161,6 +182,8 @@ const CHARACTERS = [
     faction: "Schwarzkatzen-Piraten",
     arc: "Syrup Village",
     image: "",
+    rank: "basic",
+    power: 213,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -170,6 +193,8 @@ const CHARACTERS = [
     faction: "Syrup Village",
     arc: "Syrup Village",
     image: "",
+    rank: "noob",
+    power: 44,
     tags: ["zivilist"]
   },
 
@@ -183,6 +208,8 @@ const CHARACTERS = [
     faction: "Krieg-Piraten",
     arc: "Baratie",
     image: "",
+    rank: "basic",
+    power: 215,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -192,6 +219,8 @@ const CHARACTERS = [
     faction: "Krieg-Piraten",
     arc: "Baratie",
     image: "",
+    rank: "noob",
+    power: 46,
     tags: ["pirat"]
   },
   {
@@ -201,6 +230,8 @@ const CHARACTERS = [
     faction: "Baratie",
     arc: "Baratie",
     image: "",
+    rank: "noob",
+    power: 47,
     tags: ["koch"]
   },
   {
@@ -210,6 +241,8 @@ const CHARACTERS = [
     faction: "Baratie",
     arc: "Baratie",
     image: "",
+    rank: "noob",
+    power: 48,
     tags: ["koch"]
   },
 
@@ -223,6 +256,8 @@ const CHARACTERS = [
     faction: "Arlong-Piraten",
     arc: "Arlong Park",
     image: "",
+    rank: "basic",
+    power: 219,
     tags: ["pirat", "kapitän", "fischmensch"]
   },
   {
@@ -232,6 +267,8 @@ const CHARACTERS = [
     faction: "Arlong-Piraten",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 71,
     tags: ["pirat", "fischmensch"]
   },
 
@@ -245,6 +282,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Loguetown",
     image: "",
+    rank: "basic",
+    power: 242,
     tags: ["marine"]
   },
   {
@@ -254,6 +293,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Loguetown",
     image: "",
+    rank: "advanced",
+    power: 447,
     tags: ["marine"]
   },
   {
@@ -263,6 +304,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Romance Dawn",
     image: "",
+    rank: "advanced",
+    power: 448,
     tags: ["marine"]
   },
   {
@@ -272,6 +315,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Arabasta",
     image: "",
+    rank: "basic",
+    power: 245,
     tags: ["marine"]
   },
   {
@@ -281,6 +326,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Baratie",
     image: "",
+    rank: "basic",
+    power: 246,
     tags: ["marine"]
   },
   {
@@ -290,6 +337,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Syrup Village",
     image: "",
+    rank: "basic",
+    power: 247,
     tags: ["marine", "ehemals-pirat"]
   },
 
@@ -303,6 +352,8 @@ const CHARACTERS = [
     faction: "Alvida-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "basic",
+    power: 248,
     tags: ["pirat", "kapitän"]
   },
 
@@ -316,6 +367,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Reverse Mountain",
     image: "",
+    rank: "basic",
+    power: 249,
     tags: ["baroque-works"]
   },
   {
@@ -325,6 +378,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Whisky Peak",
     image: "",
+    rank: "noob",
+    power: 80,
     tags: ["baroque-works"]
   },
   {
@@ -334,6 +389,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Whisky Peak",
     image: "",
+    rank: "noob",
+    power: 102,
     tags: ["baroque-works", "geheimagent"]
   },
 
@@ -347,6 +404,8 @@ const CHARACTERS = [
     faction: "Drum-Königreich",
     arc: "Drum Island",
     image: "",
+    rank: "basic",
+    power: 273,
     tags: ["pirat", "ehemals-könig"]
   },
   {
@@ -356,6 +415,8 @@ const CHARACTERS = [
     faction: "Drum Island",
     arc: "Drum Island",
     image: "",
+    rank: "noob",
+    power: 104,
     tags: ["zivilist", "soldat"]
   },
 
@@ -369,6 +430,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Arabasta",
     image: "",
+    rank: "basic",
+    power: 275,
     tags: ["soldat"]
   },
 
@@ -382,6 +445,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 106,
     tags: ["skypiea"]
   },
 
@@ -395,6 +460,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Enies Lobby",
     image: "",
+    rank: "basic",
+    power: 277,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -404,6 +471,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Enies Lobby",
     image: "",
+    rank: "basic",
+    power: 278,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -413,6 +482,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Enies Lobby",
     image: "",
+    rank: "epic",
+    power: 794,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -422,6 +493,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Enies Lobby",
     image: "",
+    rank: "basic",
+    power: 280,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -431,6 +504,8 @@ const CHARACTERS = [
     faction: "Water Seven",
     arc: "Water Seven",
     image: "",
+    rank: "noob",
+    power: 111,
     tags: ["zivilist", "schiffsbauer", "fischmensch"]
   },
   {
@@ -440,6 +515,8 @@ const CHARACTERS = [
     faction: "Water Seven",
     arc: "Water Seven",
     image: "",
+    rank: "noob",
+    power: 133,
     tags: ["zivilist"]
   },
   {
@@ -449,6 +526,8 @@ const CHARACTERS = [
     faction: "Water Seven",
     arc: "Water Seven",
     image: "",
+    rank: "noob",
+    power: 134,
     tags: ["zivilist"]
   },
 
@@ -462,6 +541,7 @@ const CHARACTERS = [
     faction: "Heart-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "epic",
     power: 790,
     roleBonuses: { healer: 85, support: 45 },
     tags: ["pirat", "kapitän", "supernovae"]
@@ -477,6 +557,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Romance Dawn",
     image: "",
+    rank: "elite",
+    power: 666,
     tags: ["marine", "ehemals-pirat"]
   },
   {
@@ -486,8 +568,9 @@ const CHARACTERS = [
     faction: "Rothaar-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "legendary",
+    power: 925,
     tags: ["pirat", "kapitän", "yonkou"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0045",
@@ -496,8 +579,9 @@ const CHARACTERS = [
     faction: "Sieben Samurai der Meere",
     arc: "Baratie",
     image: "",
+    rank: "legendary",
+    power: 926,
     tags: ["pirat", "sieben-samurai"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0046",
@@ -506,6 +590,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "elite",
+    power: 669,
     tags: ["pirat", "sieben-samurai", "baroque-works"]
   },
   {
@@ -515,6 +601,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "advanced",
+    power: 514,
     tags: ["baroque-works"]
   },
   {
@@ -524,6 +612,8 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Arabasta",
     image: "",
+    rank: "epic",
+    power: 826,
     tags: ["pirat", "kapitän"]
   },
 
@@ -537,6 +627,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Romance Dawn",
     image: "",
+    rank: "basic",
+    power: 312,
     tags: ["marine"]
   },
   {
@@ -546,6 +638,8 @@ const CHARACTERS = [
     faction: "Rothaar-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "epic",
+    power: 718,
     tags: ["pirat"]
   },
   {
@@ -555,6 +649,8 @@ const CHARACTERS = [
     faction: "Rothaar-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "elite",
+    power: 564,
     tags: ["pirat"]
   },
   {
@@ -564,6 +660,8 @@ const CHARACTERS = [
     faction: "Rothaar-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "elite",
+    power: 565,
     tags: ["pirat"]
   },
   {
@@ -573,6 +671,8 @@ const CHARACTERS = [
     faction: "Foosha Village",
     arc: "Romance Dawn",
     image: "",
+    rank: "noob",
+    power: 167,
     tags: ["zivilist"]
   },
   {
@@ -582,8 +682,9 @@ const CHARACTERS = [
     faction: "Revolutionsarmee",
     arc: "Loguetown",
     image: "",
+    rank: "legendary",
+    power: 956,
     tags: ["revolution"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0055",
@@ -592,8 +693,9 @@ const CHARACTERS = [
     faction: "Roger-Piraten",
     arc: "Romance Dawn",
     image: "",
+    rank: "legendary",
+    power: 957,
     tags: ["pirat", "kapitän", "legende"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0056",
@@ -602,6 +704,8 @@ const CHARACTERS = [
     faction: "Buggy-Piraten",
     arc: "Orange Town",
     image: "",
+    rank: "noob",
+    power: 170,
     tags: ["pirat"]
   },
   {
@@ -611,6 +715,8 @@ const CHARACTERS = [
     faction: "Schwarzkatzen-Piraten",
     arc: "Syrup Village",
     image: "",
+    rank: "noob",
+    power: 171,
     tags: ["pirat"]
   },
   {
@@ -620,6 +726,8 @@ const CHARACTERS = [
     faction: "Schwarzkatzen-Piraten",
     arc: "Syrup Village",
     image: "",
+    rank: "noob",
+    power: 172,
     tags: ["pirat"]
   },
   {
@@ -629,6 +737,8 @@ const CHARACTERS = [
     faction: "Syrup Village",
     arc: "Syrup Village",
     image: "",
+    rank: "basic",
+    power: 343,
     tags: ["zivilist"]
   },
   {
@@ -638,6 +748,8 @@ const CHARACTERS = [
     faction: "Baratie",
     arc: "Baratie",
     image: "",
+    rank: "noob",
+    power: 34,
     tags: ["pirat", "koch"]
   },
   {
@@ -647,6 +759,8 @@ const CHARACTERS = [
     faction: "Krieg-Piraten",
     arc: "Baratie",
     image: "",
+    rank: "noob",
+    power: 35,
     tags: ["pirat"]
   },
   {
@@ -656,6 +770,8 @@ const CHARACTERS = [
     faction: "Arlong-Piraten",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 36,
     tags: ["pirat", "fischmensch"]
   },
   {
@@ -665,6 +781,8 @@ const CHARACTERS = [
     faction: "Arlong-Piraten",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 37,
     tags: ["pirat", "fischmensch"]
   },
   {
@@ -674,6 +792,8 @@ const CHARACTERS = [
     faction: "Cocoyashi Village",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 38,
     tags: ["zivilist", "ehemals-marine"]
   },
   {
@@ -683,6 +803,8 @@ const CHARACTERS = [
     faction: "Cocoyashi Village",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 39,
     tags: ["zivilist"]
   },
   {
@@ -692,6 +814,8 @@ const CHARACTERS = [
     faction: "Cocoyashi Village",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 40,
     tags: ["zivilist"]
   },
   {
@@ -701,6 +825,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Arlong Park",
     image: "",
+    rank: "noob",
+    power: 41,
     tags: ["marine"]
   },
 
@@ -714,6 +840,8 @@ const CHARACTERS = [
     faction: "Leuchtturm von Reverse Mountain",
     arc: "Reverse Mountain",
     image: "",
+    rank: "noob",
+    power: 42,
     tags: ["zivilist"]
   },
   {
@@ -723,6 +851,8 @@ const CHARACTERS = [
     faction: "Rumbar-Piraten",
     arc: "Reverse Mountain",
     image: "",
+    rank: "noob",
+    power: 43,
     tags: ["tier"]
   },
   {
@@ -732,6 +862,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Whisky Peak",
     image: "",
+    rank: "basic",
+    power: 235,
     tags: ["royalität", "baroque-works"]
   },
   {
@@ -741,6 +873,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Whisky Peak",
     image: "",
+    rank: "noob",
+    power: 66,
     tags: ["tier"]
   },
   {
@@ -750,6 +884,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Little Garden",
     image: "",
+    rank: "basic",
+    power: 237,
     tags: ["baroque-works"]
   },
   {
@@ -759,6 +895,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Little Garden",
     image: "",
+    rank: "noob",
+    power: 68,
     tags: ["baroque-works"]
   },
   {
@@ -768,6 +906,8 @@ const CHARACTERS = [
     faction: "Riesenpiraten",
     arc: "Little Garden",
     image: "",
+    rank: "elite",
+    power: 629,
     tags: ["pirat", "riese"]
   },
   {
@@ -777,6 +917,8 @@ const CHARACTERS = [
     faction: "Riesenpiraten",
     arc: "Little Garden",
     image: "",
+    rank: "basic",
+    power: 240,
     tags: ["pirat", "riese"]
   },
   {
@@ -786,6 +928,8 @@ const CHARACTERS = [
     faction: "Drum Kingdom",
     arc: "Drum Island",
     image: "",
+    rank: "basic",
+    power: 241,
     tags: ["zivilist", "arzt"]
   },
   {
@@ -795,6 +939,8 @@ const CHARACTERS = [
     faction: "Drum Kingdom",
     arc: "Drum Island",
     image: "",
+    rank: "basic",
+    power: 242,
     tags: ["zivilist", "arzt"]
   },
   {
@@ -804,6 +950,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "advanced",
+    power: 437,
     tags: ["baroque-works"]
   },
   {
@@ -813,6 +961,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 74,
     tags: ["baroque-works"]
   },
   {
@@ -822,6 +972,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 96,
     tags: ["baroque-works"]
   },
   {
@@ -831,6 +983,8 @@ const CHARACTERS = [
     faction: "Baroque Works",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 97,
     tags: ["baroque-works"]
   },
   {
@@ -840,6 +994,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 98,
     tags: ["soldat"]
   },
   {
@@ -849,6 +1005,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Arabasta",
     image: "",
+    rank: "basic",
+    power: 269,
     tags: ["royalität"]
   },
   {
@@ -858,6 +1016,8 @@ const CHARACTERS = [
     faction: "Rebellen von Arabasta",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 100,
     tags: ["zivilist"]
   },
   {
@@ -867,6 +1027,8 @@ const CHARACTERS = [
     faction: "Königreich Arabasta",
     arc: "Arabasta",
     image: "",
+    rank: "noob",
+    power: 101,
     tags: ["zivilist"]
   },
 
@@ -880,6 +1042,8 @@ const CHARACTERS = [
     faction: "Bellamy-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "basic",
+    power: 272,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -889,6 +1053,8 @@ const CHARACTERS = [
     faction: "Bellamy-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "noob",
+    power: 103,
     tags: ["pirat"]
   },
   {
@@ -898,6 +1064,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "legendary",
+    power: 902,
     tags: ["pirat", "kapitän", "yonkou"]
   },
   {
@@ -907,6 +1075,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "elite",
+    power: 665,
     tags: ["pirat"]
   },
   {
@@ -916,6 +1086,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "noob",
+    power: 127,
     tags: ["pirat"]
   },
   {
@@ -925,6 +1097,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "noob",
+    power: 128,
     tags: ["pirat"]
   },
   {
@@ -934,6 +1108,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "elite",
+    power: 558,
     tags: ["pirat", "tier"]
   },
   {
@@ -943,6 +1119,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "advanced",
+    power: 494,
     tags: ["pirat"]
   },
   {
@@ -952,10 +1130,10 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Jaya",
     image: "",
+    rank: "legendary",
     power: 930,
     roleBonuses: { captain: 55 },
     tags: ["marine", "admiral"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0095",
@@ -964,10 +1142,10 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "legendary",
     power: 975,
     roleBonuses: { captain: 80, tank: 45 },
     tags: ["pirat", "kapitän", "yonkou", "legende"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0096",
@@ -976,6 +1154,8 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Jaya",
     image: "",
+    rank: "epic",
+    power: 717,
     roleBonuses: { healer: 95, support: 35 },
     tags: ["pirat"]
   },
@@ -986,6 +1166,8 @@ const CHARACTERS = [
     faction: "Saruyama-Allianz",
     arc: "Jaya",
     image: "",
+    rank: "noob",
+    power: 134,
     tags: ["pirat"]
   },
   {
@@ -995,6 +1177,8 @@ const CHARACTERS = [
     faction: "Saruyama-Allianz",
     arc: "Jaya",
     image: "",
+    rank: "noob",
+    power: 135,
     tags: ["pirat"]
   },
   {
@@ -1004,6 +1188,8 @@ const CHARACTERS = [
     faction: "Skypiea / Gottes Armee",
     arc: "Skypiea",
     image: "",
+    rank: "elite",
+    power: 565,
     tags: ["skypiea", "antagonist"]
   },
   {
@@ -1013,6 +1199,8 @@ const CHARACTERS = [
     faction: "Skypiea",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 165,
     tags: ["skypiea"]
   },
   {
@@ -1022,6 +1210,8 @@ const CHARACTERS = [
     faction: "Skypiea",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 166,
     tags: ["skypiea", "tier"]
   },
   {
@@ -1031,6 +1221,8 @@ const CHARACTERS = [
     faction: "Shandia",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 167,
     tags: ["skypiea", "krieger"]
   },
   {
@@ -1040,6 +1232,8 @@ const CHARACTERS = [
     faction: "Skypiea",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 168,
     tags: ["skypiea", "zivilist"]
   },
   {
@@ -1049,6 +1243,8 @@ const CHARACTERS = [
     faction: "Skypiea",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 169,
     tags: ["skypiea", "zivilist"]
   },
   {
@@ -1058,6 +1254,8 @@ const CHARACTERS = [
     faction: "Shandia",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 170,
     tags: ["skypiea", "krieger"]
   },
   {
@@ -1067,6 +1265,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 171,
     tags: ["skypiea"]
   },
   {
@@ -1076,6 +1276,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 172,
     tags: ["skypiea"]
   },
   {
@@ -1085,6 +1287,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 173,
     tags: ["skypiea"]
   },
   {
@@ -1094,6 +1298,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 174,
     tags: ["skypiea"]
   },
   {
@@ -1103,6 +1309,8 @@ const CHARACTERS = [
     faction: "Enels Priester",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 35,
     tags: ["skypiea"]
   },
   {
@@ -1112,6 +1320,8 @@ const CHARACTERS = [
     faction: "Skypiea",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 36,
     tags: ["skypiea", "tier"]
   },
   {
@@ -1121,6 +1331,8 @@ const CHARACTERS = [
     faction: "Shandia",
     arc: "Skypiea",
     image: "",
+    rank: "noob",
+    power: 37,
     tags: ["skypiea", "krieger", "historie"]
   },
   {
@@ -1130,6 +1342,8 @@ const CHARACTERS = [
     faction: "Königreich Lvneel",
     arc: "Skypiea",
     image: "",
+    rank: "advanced",
+    power: 523,
     tags: ["legende", "historie"]
   },
 
@@ -1143,6 +1357,8 @@ const CHARACTERS = [
     faction: "Foxy-Piraten",
     arc: "Long Ring Long Land",
     image: "",
+    rank: "basic",
+    power: 209,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1152,6 +1368,8 @@ const CHARACTERS = [
     faction: "Foxy-Piraten",
     arc: "Long Ring Long Land",
     image: "",
+    rank: "noob",
+    power: 40,
     tags: ["pirat"]
   },
   {
@@ -1161,6 +1379,8 @@ const CHARACTERS = [
     faction: "Foxy-Piraten",
     arc: "Long Ring Long Land",
     image: "",
+    rank: "noob",
+    power: 41,
     tags: ["pirat"]
   },
   {
@@ -1170,6 +1390,8 @@ const CHARACTERS = [
     faction: "Long Ring Long Land",
     arc: "Long Ring Long Land",
     image: "",
+    rank: "noob",
+    power: 42,
     tags: ["zivilist"]
   },
   {
@@ -1179,6 +1401,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Long Ring Long Land",
     image: "",
+    rank: "epic",
+    power: 777,
     tags: ["marine", "admiral"]
   },
   {
@@ -1188,6 +1412,8 @@ const CHARACTERS = [
     faction: "Galley-La Company",
     arc: "Water Seven",
     image: "",
+    rank: "noob",
+    power: 44,
     tags: ["zivilist", "schiffsbauer"]
   },
   {
@@ -1197,6 +1423,8 @@ const CHARACTERS = [
     faction: "Galley-La Company",
     arc: "Water Seven",
     image: "",
+    rank: "basic",
+    power: 236,
     tags: ["zivilist", "schiffsbauer"]
   },
   {
@@ -1206,6 +1434,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Water Seven",
     image: "",
+    rank: "epic",
+    power: 801,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1215,6 +1445,8 @@ const CHARACTERS = [
     faction: "CP9 / CP0",
     arc: "Water Seven",
     image: "",
+    rank: "elite",
+    power: 647,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1224,6 +1456,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Water Seven",
     image: "",
+    rank: "advanced",
+    power: 383,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1233,6 +1467,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Water Seven",
     image: "",
+    rank: "basic",
+    power: 240,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1242,6 +1478,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Water Seven",
     image: "",
+    rank: "basic",
+    power: 241,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1251,6 +1489,8 @@ const CHARACTERS = [
     faction: "Water Seven",
     arc: "Water Seven",
     image: "",
+    rank: "basic",
+    power: 242,
     tags: ["tier", "zivilist"]
   },
   {
@@ -1260,6 +1500,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Enies Lobby",
     image: "",
+    rank: "epic",
+    power: 807,
     tags: ["marine", "admiral"]
   },
   {
@@ -1269,6 +1511,8 @@ const CHARACTERS = [
     faction: "CP9",
     arc: "Enies Lobby",
     image: "",
+    rank: "basic",
+    power: 244,
     tags: ["cp9", "weltregierung"]
   },
   {
@@ -1278,6 +1522,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Enies Lobby",
     image: "",
+    rank: "basic",
+    power: 245,
     tags: ["marine", "riese"]
   },
   {
@@ -1287,8 +1533,9 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Post-Enies Lobby",
     image: "",
+    rank: "legendary",
+    power: 945,
     tags: ["marine", "legende"],
-    rank: "legendary"
   },
 
   // ════════════════════════════════════════════════════════════
@@ -1301,6 +1548,8 @@ const CHARACTERS = [
     faction: "Hawkins-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "elite",
+    power: 677,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1310,6 +1559,8 @@ const CHARACTERS = [
     faction: "Thriller Bark / Sieben Samurai",
     arc: "Thriller Bark",
     image: "",
+    rank: "elite",
+    power: 678,
     tags: ["pirat", "kapitän", "sieben-samurai"]
   },
   {
@@ -1319,6 +1570,8 @@ const CHARACTERS = [
     faction: "Thriller Bark",
     arc: "Thriller Bark",
     image: "",
+    rank: "noob",
+    power: 100,
     tags: ["pirat"]
   },
   {
@@ -1328,6 +1581,8 @@ const CHARACTERS = [
     faction: "Thriller Bark",
     arc: "Thriller Bark",
     image: "",
+    rank: "noob",
+    power: 101,
     tags: ["pirat"]
   },
   {
@@ -1337,6 +1592,8 @@ const CHARACTERS = [
     faction: "Thriller Bark",
     arc: "Thriller Bark",
     image: "",
+    rank: "noob",
+    power: 102,
     tags: ["pirat", "arzt"]
   },
   {
@@ -1346,6 +1603,8 @@ const CHARACTERS = [
     faction: "Thriller Bark",
     arc: "Thriller Bark",
     image: "",
+    rank: "advanced",
+    power: 417,
     tags: ["thriller-bark", "riese"]
   },
   {
@@ -1355,6 +1614,8 @@ const CHARACTERS = [
     faction: "Thriller Bark",
     arc: "Thriller Bark",
     image: "",
+    rank: "advanced",
+    power: 418,
     tags: ["thriller-bark", "legende"]
   },
   {
@@ -1364,6 +1625,8 @@ const CHARACTERS = [
     faction: "Rolling Pirates",
     arc: "Thriller Bark",
     image: "",
+    rank: "basic",
+    power: 275,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1373,6 +1636,8 @@ const CHARACTERS = [
     faction: "Revolutionsarmee / Sieben Samurai",
     arc: "Thriller Bark",
     image: "",
+    rank: "epic",
+    power: 840,
     tags: ["revolution", "sieben-samurai"]
   },
   {
@@ -1382,6 +1647,8 @@ const CHARACTERS = [
     faction: "Revolutionsarmee",
     arc: "Impel Down",
     image: "",
+    rank: "elite",
+    power: 576,
     tags: ["revolution"]
   },
   {
@@ -1391,6 +1658,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Impel Down",
     image: "",
+    rank: "epic",
+    power: 732,
     tags: ["pirat", "fischmensch", "hauptcharakter"]
   },
   {
@@ -1400,6 +1669,8 @@ const CHARACTERS = [
     faction: "Kid-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "epic",
+    power: 733,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1409,6 +1680,8 @@ const CHARACTERS = [
     faction: "Kid-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "elite",
+    power: 579,
     tags: ["pirat"]
   },
   {
@@ -1418,6 +1691,8 @@ const CHARACTERS = [
     faction: "Fire Tank-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "elite",
+    power: 580,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1427,6 +1702,8 @@ const CHARACTERS = [
     faction: "On Air-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "elite",
+    power: 581,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1436,6 +1713,8 @@ const CHARACTERS = [
     faction: "Drake-Piraten / SWORD",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "epic",
+    power: 737,
     tags: ["pirat", "kapitän", "supernovae", "marine"]
   },
   {
@@ -1445,6 +1724,8 @@ const CHARACTERS = [
     faction: "Bonney-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "advanced",
+    power: 449,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1454,6 +1735,8 @@ const CHARACTERS = [
     faction: "Fallen Monk-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "advanced",
+    power: 450,
     tags: ["pirat", "kapitän", "supernovae"]
   },
   {
@@ -1463,6 +1746,7 @@ const CHARACTERS = [
     faction: "Roger-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "legendary",
     power: 930,
     roleBonuses: { viceCaptain: 90 },
     tags: ["pirat", "legende"]
@@ -1474,6 +1758,8 @@ const CHARACTERS = [
     faction: "Sabaody",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "noob",
+    power: 159,
     tags: ["zivilist"]
   },
   {
@@ -1483,6 +1769,8 @@ const CHARACTERS = [
     faction: "Flying Fish Riders",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "noob",
+    power: 160,
     tags: ["pirat"]
   },
   {
@@ -1492,6 +1780,8 @@ const CHARACTERS = [
     faction: "Ryugu Kingdom",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "noob",
+    power: 161,
     tags: ["zivilist", "meerjungfrau"]
   },
   {
@@ -1501,6 +1791,8 @@ const CHARACTERS = [
     faction: "Sabaody",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "noob",
+    power: 162,
     tags: ["zivilist"]
   },
   {
@@ -1510,6 +1802,8 @@ const CHARACTERS = [
     faction: "Marine / Vegapunk-Wachtruppe",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "elite",
+    power: 611,
     tags: ["marine"]
   },
   {
@@ -1519,6 +1813,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "epic",
+    power: 767,
     tags: ["marine", "admiral"]
   },
   {
@@ -1528,6 +1824,8 @@ const CHARACTERS = [
     faction: "Weltaristokraten",
     arc: "Sabaody Archipel",
     image: "",
+    rank: "noob",
+    power: 165,
     tags: ["weltaristokraten"]
   },
   {
@@ -1537,6 +1835,7 @@ const CHARACTERS = [
     faction: "Kuja-Piraten",
     arc: "Amazon Lily",
     image: "",
+    rank: "epic",
     power: 805,
     roleBonuses: { captain: 45, support: 25 },
     tags: ["pirat", "kapitän", "sieben-samurai", "kuja"]
@@ -1548,6 +1847,8 @@ const CHARACTERS = [
     faction: "Kuja-Piraten",
     arc: "Amazon Lily",
     image: "",
+    rank: "noob",
+    power: 167,
     tags: ["pirat", "kuja"]
   },
   {
@@ -1557,6 +1858,8 @@ const CHARACTERS = [
     faction: "Kuja-Piraten",
     arc: "Amazon Lily",
     image: "",
+    rank: "noob",
+    power: 168,
     tags: ["pirat", "kuja"]
   },
   {
@@ -1566,6 +1869,8 @@ const CHARACTERS = [
     faction: "Amazon Lily",
     arc: "Amazon Lily",
     image: "",
+    rank: "noob",
+    power: 29,
     tags: ["kuja"]
   },
   {
@@ -1575,6 +1880,8 @@ const CHARACTERS = [
     faction: "Kuja",
     arc: "Amazon Lily",
     image: "",
+    rank: "noob",
+    power: 30,
     tags: ["kuja"]
   },
   {
@@ -1584,6 +1891,8 @@ const CHARACTERS = [
     faction: "Impel Down",
     arc: "Impel Down",
     image: "",
+    rank: "elite",
+    power: 640,
     roleBonuses: { tank: 90 },
     tags: ["wächter"]
   },
@@ -1594,6 +1903,8 @@ const CHARACTERS = [
     faction: "Impel Down",
     arc: "Impel Down",
     image: "",
+    rank: "basic",
+    power: 202,
     tags: ["wächter"]
   },
   {
@@ -1603,6 +1914,8 @@ const CHARACTERS = [
     faction: "Blackbeard-Piraten",
     arc: "Impel Down",
     image: "",
+    rank: "elite",
+    power: 642,
     tags: ["pirat", "ehemals-wächter"]
   },
   {
@@ -1612,6 +1925,8 @@ const CHARACTERS = [
     faction: "Impel Down",
     arc: "Impel Down",
     image: "",
+    rank: "noob",
+    power: 34,
     tags: ["wächter"]
   },
   {
@@ -1621,6 +1936,8 @@ const CHARACTERS = [
     faction: "Impel Down",
     arc: "Impel Down",
     image: "",
+    rank: "basic",
+    power: 205,
     tags: ["wächter"]
   },
   {
@@ -1630,6 +1947,8 @@ const CHARACTERS = [
     faction: "Revolutionsarmee",
     arc: "Impel Down",
     image: "",
+    rank: "advanced",
+    power: 511,
     tags: ["revolution"]
   },
   {
@@ -1639,6 +1958,8 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Marineford",
     image: "",
+    rank: "elite",
+    power: 646,
     tags: ["pirat"]
   },
   {
@@ -1648,6 +1969,8 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Marineford",
     image: "",
+    rank: "elite",
+    power: 647,
     tags: ["pirat"]
   },
   {
@@ -1657,6 +1980,8 @@ const CHARACTERS = [
     faction: "Donquixote-Piraten / Sieben Samurai",
     arc: "Marineford",
     image: "",
+    rank: "epic",
+    power: 824,
     tags: ["pirat", "kapitän", "sieben-samurai"]
   },
   {
@@ -1666,6 +1991,8 @@ const CHARACTERS = [
     faction: "Dadan-Familie",
     arc: "Post-War",
     image: "",
+    rank: "basic",
+    power: 231,
     tags: ["pirat"]
   },
   {
@@ -1675,6 +2002,8 @@ const CHARACTERS = [
     faction: "Revolutionsarmee",
     arc: "Post-War",
     image: "",
+    rank: "epic",
+    power: 826,
     tags: ["revolution"]
   },
 
@@ -1688,6 +2017,8 @@ const CHARACTERS = [
     faction: "Caribou-Piraten",
     arc: "Return to Sabaody",
     image: "",
+    rank: "basic",
+    power: 233,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1697,6 +2028,8 @@ const CHARACTERS = [
     faction: "Caribou-Piraten",
     arc: "Return to Sabaody",
     image: "",
+    rank: "noob",
+    power: 64,
     tags: ["pirat"]
   },
   {
@@ -1706,6 +2039,8 @@ const CHARACTERS = [
     faction: "Fake Straw Hat Pirates",
     arc: "Return to Sabaody",
     image: "",
+    rank: "noob",
+    power: 65,
     tags: ["pirat"]
   },
   {
@@ -1715,6 +2050,8 @@ const CHARACTERS = [
     faction: "Ryugu Kingdom",
     arc: "Fish-Man Island",
     image: "",
+    rank: "basic",
+    power: 236,
     tags: ["royalität", "meerjungfrau"]
   },
   {
@@ -1724,6 +2061,8 @@ const CHARACTERS = [
     faction: "Ryugu Kingdom",
     arc: "Fish-Man Island",
     image: "",
+    rank: "basic",
+    power: 237,
     tags: ["royalität", "fischmensch"]
   },
   {
@@ -1733,6 +2072,8 @@ const CHARACTERS = [
     faction: "Ryugu Kingdom",
     arc: "Fish-Man Island",
     image: "",
+    rank: "basic",
+    power: 238,
     tags: ["royalität", "fischmensch"]
   },
   {
@@ -1742,6 +2083,8 @@ const CHARACTERS = [
     faction: "New Fish-Man Pirates",
     arc: "Fish-Man Island",
     image: "",
+    rank: "basic",
+    power: 239,
     tags: ["pirat", "kapitän", "fischmensch"]
   },
   {
@@ -1751,6 +2094,8 @@ const CHARACTERS = [
     faction: "Flying Pirates",
     arc: "Fish-Man Island",
     image: "",
+    rank: "basic",
+    power: 261,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1760,6 +2105,8 @@ const CHARACTERS = [
     faction: "Sun Pirates",
     arc: "Fish-Man Island",
     image: "",
+    rank: "elite",
+    power: 570,
     tags: ["pirat", "kapitän", "fischmensch", "legende"]
   },
   {
@@ -1769,6 +2116,8 @@ const CHARACTERS = [
     faction: "Ryugu Kingdom",
     arc: "Fish-Man Island",
     image: "",
+    rank: "elite",
+    power: 571,
     tags: ["royalität", "meerjungfrau", "legende"]
   },
 
@@ -1782,6 +2131,8 @@ const CHARACTERS = [
     faction: "Wissenschaftler / Donquixote",
     arc: "Punk Hazard",
     image: "",
+    rank: "advanced",
+    power: 398,
     tags: ["antagonist"]
   },
   {
@@ -1791,6 +2142,8 @@ const CHARACTERS = [
     faction: "Donquixote-Familie",
     arc: "Punk Hazard",
     image: "",
+    rank: "basic",
+    power: 265,
     tags: ["pirat"]
   },
   {
@@ -1800,6 +2153,8 @@ const CHARACTERS = [
     faction: "Donquixote-Familie",
     arc: "Punk Hazard",
     image: "",
+    rank: "advanced",
+    power: 400,
     tags: ["pirat"]
   },
   {
@@ -1809,6 +2164,8 @@ const CHARACTERS = [
     faction: "Wano-Samurai / Kozuki",
     arc: "Punk Hazard",
     image: "",
+    rank: "advanced",
+    power: 401,
     tags: ["samurai", "wano"]
   },
   {
@@ -1818,6 +2175,8 @@ const CHARACTERS = [
     faction: "Kozuki-Clan",
     arc: "Punk Hazard",
     image: "",
+    rank: "elite",
+    power: 576,
     tags: ["royalität", "wano"]
   },
   {
@@ -1827,6 +2186,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Dressrosa",
     image: "",
+    rank: "epic",
+    power: 732,
     tags: ["marine", "admiral"]
   },
   {
@@ -1836,6 +2197,8 @@ const CHARACTERS = [
     faction: "Barto Club / Strohhut-Großflotte",
     arc: "Dressrosa",
     image: "",
+    rank: "elite",
+    power: 578,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1845,6 +2208,8 @@ const CHARACTERS = [
     faction: "Beautiful Pirates / Strohhut-Großflotte",
     arc: "Dressrosa",
     image: "",
+    rank: "basic",
+    power: 292,
     tags: ["pirat", "kapitän"]
   },
   {
@@ -1854,6 +2219,8 @@ const CHARACTERS = [
     faction: "Dressrosa",
     arc: "Dressrosa",
     image: "",
+    rank: "noob",
+    power: 123,
     tags: ["zivilist", "krieger"]
   },
   {
@@ -1863,6 +2230,8 @@ const CHARACTERS = [
     faction: "Dressrosa",
     arc: "Dressrosa",
     image: "",
+    rank: "noob",
+    power: 124,
     tags: ["zivilist", "krieger"]
   },
   {
@@ -1872,6 +2241,8 @@ const CHARACTERS = [
     faction: "Donquixote-Familie",
     arc: "Dressrosa",
     image: "",
+    rank: "epic",
+    power: 758,
     tags: ["pirat"]
   },
   {
@@ -1881,6 +2252,8 @@ const CHARACTERS = [
     faction: "Donquixote-Familie",
     arc: "Dressrosa",
     image: "",
+    rank: "noob",
+    power: 126,
     tags: ["pirat"]
   },
 
@@ -1894,6 +2267,8 @@ const CHARACTERS = [
     faction: "Beasts Pirates",
     arc: "Zou",
     image: "",
+    rank: "elite",
+    power: 605,
     tags: ["pirat"]
   },
   {
@@ -1903,8 +2278,9 @@ const CHARACTERS = [
     faction: "Big Mom Pirates",
     arc: "Whole Cake Island",
     image: "",
+    rank: "legendary",
+    power: 986,
     tags: ["pirat", "kapitän", "yonkou"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0197",
@@ -1913,6 +2289,8 @@ const CHARACTERS = [
     faction: "Big Mom Pirates",
     arc: "Whole Cake Island",
     image: "",
+    rank: "epic",
+    power: 762,
     tags: ["pirat"]
   },
   {
@@ -1922,6 +2300,8 @@ const CHARACTERS = [
     faction: "Big Mom Pirates",
     arc: "Whole Cake Island",
     image: "",
+    rank: "basic",
+    power: 300,
     tags: ["pirat"]
   },
   {
@@ -1931,9 +2311,10 @@ const CHARACTERS = [
     faction: "Beasts Pirates",
     arc: "Wano Country",
     image: "",
+    rank: "legendary",
+    power: 989,
     roleBonuses: { tank: 65, captain: 35 },
     tags: ["pirat", "kapitän", "yonkou"],
-    rank: "legendary"
   },
   {
     id: "onepiece-0200",
@@ -1942,6 +2323,8 @@ const CHARACTERS = [
     faction: "Wano / Verbündete",
     arc: "Wano Country",
     image: "",
+    rank: "elite",
+    power: 627,
     roleBonuses: { tank: 65, support: 25 },
     tags: ["wano"]
   },
@@ -1952,6 +2335,8 @@ const CHARACTERS = [
     faction: "Beasts Pirates",
     arc: "Wano Country",
     image: "",
+    rank: "epic",
+    power: 783,
     tags: ["pirat"]
   },
   {
@@ -1961,6 +2346,8 @@ const CHARACTERS = [
     faction: "Beasts Pirates",
     arc: "Wano Country",
     image: "",
+    rank: "basic",
+    power: 332,
     tags: ["pirat"]
   },
 
@@ -1974,6 +2361,7 @@ const CHARACTERS = [
     faction: "SSG / Weltregierung",
     arc: "Egghead",
     image: "",
+    rank: "elite",
     power: 640,
     roleBonuses: { support: 130, healer: 35 },
     tags: ["wissenschaftler", "weltregierung"]

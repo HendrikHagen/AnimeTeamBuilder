@@ -293,17 +293,14 @@ button:disabled {
 
 #char-image-wrap.rank-legendary {
   box-shadow: 0 0 0 2px rgba(245, 210, 106, 0.75), 0 0 22px rgba(255, 143, 51, 0.58);
-  animation: legendaryPulse 1.05s ease-in-out infinite;
 }
 
 #char-image-wrap.rank-epic {
   box-shadow: 0 0 0 2px rgba(156, 107, 255, 0.72), 0 0 18px rgba(87, 215, 255, 0.45);
-  animation: epicPulse 1.5s ease-in-out infinite;
 }
 
 #char-image-wrap.rank-elite {
   box-shadow: 0 0 0 2px rgba(72, 215, 196, 0.6), 0 0 15px rgba(28, 166, 232, 0.34);
-  animation: elitePulse 2s ease-in-out infinite;
 }
 
 #char-image-wrap.rank-advanced {
@@ -498,6 +495,34 @@ button:disabled {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.btn-joker {
+  width: 100%;
+  margin-top: 0.55rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: var(--radius);
+  border: 1px dashed rgba(212, 160, 23, 0.55);
+  background: rgba(212, 160, 23, 0.1);
+  color: #f2d173;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.btn-joker[data-player="player2"] {
+  border-color: rgba(62, 184, 212, 0.55);
+  background: rgba(62, 184, 212, 0.1);
+  color: #9adfee;
+}
+
+.btn-joker:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.btn-joker:disabled {
+  opacity: 0.45;
 }
 
 .btn-role {
