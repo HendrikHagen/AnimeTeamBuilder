@@ -16,6 +16,9 @@
  *     faction: "",           // Crew / Fraktion (optional)
  *     arc: "",               // Erster Arc / Zugehörigkeit (optional)
  *     image: "",             // Bild-URL (optional, kann leer bleiben)
+ *     rank: "",              // z.B. "legendary" (optional)
+ *     power: 0,               // Basis-Power 0-1000 (optional)
+ *     roleBonuses: {},        // Rollen-Boni, z.B. { healer: 80, support: 40 } (optional)
  *     tags: []               // Stichworte wie "pirat", "marine", etc. (optional)
  *   }
  *
@@ -36,7 +39,10 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Romance Dawn",
     image: "",
-    tags: ["pirat", "kapitän", "hauptcharakter"]
+    power: 940,
+    roleBonuses: { captain: 45 },
+    tags: ["pirat", "kapitän", "hauptcharakter"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0002",
@@ -81,6 +87,8 @@ const CHARACTERS = [
     faction: "Strohhutbande",
     arc: "Drum Island",
     image: "",
+    power: 620,
+    roleBonuses: { healer: 120, support: 95 },
     tags: ["pirat", "arzt", "hauptcharakter"]
   },
   {
@@ -121,6 +129,7 @@ const CHARACTERS = [
     faction: "Buggy-Piraten",
     arc: "Orange Town",
     image: "",
+    roleBonuses: { traitor: 80, support: 20 },
     tags: ["pirat", "kapitän"]
   },
   {
@@ -453,6 +462,8 @@ const CHARACTERS = [
     faction: "Heart-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    power: 790,
+    roleBonuses: { healer: 85, support: 45 },
     tags: ["pirat", "kapitän", "supernovae"]
   },
 
@@ -475,7 +486,8 @@ const CHARACTERS = [
     faction: "Rothaar-Piraten",
     arc: "Romance Dawn",
     image: "",
-    tags: ["pirat", "kapitän", "yonkou"]
+    tags: ["pirat", "kapitän", "yonkou"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0045",
@@ -484,7 +496,8 @@ const CHARACTERS = [
     faction: "Sieben Samurai der Meere",
     arc: "Baratie",
     image: "",
-    tags: ["pirat", "sieben-samurai"]
+    tags: ["pirat", "sieben-samurai"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0046",
@@ -569,7 +582,8 @@ const CHARACTERS = [
     faction: "Revolutionsarmee",
     arc: "Loguetown",
     image: "",
-    tags: ["revolution"]
+    tags: ["revolution"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0055",
@@ -578,7 +592,8 @@ const CHARACTERS = [
     faction: "Roger-Piraten",
     arc: "Romance Dawn",
     image: "",
-    tags: ["pirat", "kapitän", "legende"]
+    tags: ["pirat", "kapitän", "legende"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0056",
@@ -937,7 +952,10 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Jaya",
     image: "",
-    tags: ["marine", "admiral"]
+    power: 930,
+    roleBonuses: { captain: 55 },
+    tags: ["marine", "admiral"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0095",
@@ -946,7 +964,10 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Jaya",
     image: "",
-    tags: ["pirat", "kapitän", "yonkou", "legende"]
+    power: 975,
+    roleBonuses: { captain: 80, tank: 45 },
+    tags: ["pirat", "kapitän", "yonkou", "legende"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0096",
@@ -955,6 +976,7 @@ const CHARACTERS = [
     faction: "Whitebeard-Piraten",
     arc: "Jaya",
     image: "",
+    roleBonuses: { healer: 95, support: 35 },
     tags: ["pirat"]
   },
   {
@@ -1265,7 +1287,8 @@ const CHARACTERS = [
     faction: "Marine",
     arc: "Post-Enies Lobby",
     image: "",
-    tags: ["marine", "legende"]
+    tags: ["marine", "legende"],
+    rank: "legendary"
   },
 
   // ════════════════════════════════════════════════════════════
@@ -1440,6 +1463,8 @@ const CHARACTERS = [
     faction: "Roger-Piraten",
     arc: "Sabaody Archipel",
     image: "",
+    power: 930,
+    roleBonuses: { viceCaptain: 90 },
     tags: ["pirat", "legende"]
   },
   {
@@ -1512,6 +1537,8 @@ const CHARACTERS = [
     faction: "Kuja-Piraten",
     arc: "Amazon Lily",
     image: "",
+    power: 805,
+    roleBonuses: { captain: 45, support: 25 },
     tags: ["pirat", "kapitän", "sieben-samurai", "kuja"]
   },
   {
@@ -1557,6 +1584,7 @@ const CHARACTERS = [
     faction: "Impel Down",
     arc: "Impel Down",
     image: "",
+    roleBonuses: { tank: 90 },
     tags: ["wächter"]
   },
   {
@@ -1875,7 +1903,8 @@ const CHARACTERS = [
     faction: "Big Mom Pirates",
     arc: "Whole Cake Island",
     image: "",
-    tags: ["pirat", "kapitän", "yonkou"]
+    tags: ["pirat", "kapitän", "yonkou"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0197",
@@ -1902,7 +1931,9 @@ const CHARACTERS = [
     faction: "Beasts Pirates",
     arc: "Wano Country",
     image: "",
-    tags: ["pirat", "kapitän", "yonkou"]
+    roleBonuses: { tank: 65, captain: 35 },
+    tags: ["pirat", "kapitän", "yonkou"],
+    rank: "legendary"
   },
   {
     id: "onepiece-0200",
@@ -1911,6 +1942,7 @@ const CHARACTERS = [
     faction: "Wano / Verbündete",
     arc: "Wano Country",
     image: "",
+    roleBonuses: { tank: 65, support: 25 },
     tags: ["wano"]
   },
   {
@@ -1942,6 +1974,8 @@ const CHARACTERS = [
     faction: "SSG / Weltregierung",
     arc: "Egghead",
     image: "",
+    power: 640,
+    roleBonuses: { support: 130, healer: 35 },
     tags: ["wissenschaftler", "weltregierung"]
   },
 

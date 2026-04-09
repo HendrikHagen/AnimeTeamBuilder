@@ -9,8 +9,10 @@
 <body>
 
   <header>
-    <h1>&#9875; One Piece</h1>
-    <p class="subtitle">Random Team Builder – 2 Spieler</p>
+    <div class="title-row">
+      <h1>&#9875; One Piece</h1>
+      <p class="subtitle">Random Team Builder</p>
+    </div>
   </header>
 
   <main>
@@ -26,6 +28,7 @@
           </div>
           <div id="char-info">
             <h2 id="char-name">–</h2>
+            <p id="char-rank" class="meta rank"></p>
             <p id="char-alias" class="meta"></p>
             <p id="char-faction" class="meta"></p>
             <p id="char-arc" class="meta arc"></p>
@@ -46,6 +49,8 @@
             <button class="btn-role" data-player="player1" data-role="viceCaptain">&#9819; Vize-Kapitän</button>
             <button class="btn-role" data-player="player1" data-role="healer">&#10010; Heiler</button>
             <button class="btn-role" data-player="player1" data-role="tank">&#9876; Tank</button>
+            <button class="btn-role" data-player="player1" data-role="support">&#10022; Support</button>
+            <button class="btn-role" data-player="player1" data-role="traitor">&#9760; Verräter</button>
           </div>
         </div>
 
@@ -56,6 +61,8 @@
             <button class="btn-role" data-player="player2" data-role="viceCaptain">&#9819; Vize-Kapitän</button>
             <button class="btn-role" data-player="player2" data-role="healer">&#10010; Heiler</button>
             <button class="btn-role" data-player="player2" data-role="tank">&#9876; Tank</button>
+            <button class="btn-role" data-player="player2" data-role="support">&#10022; Support</button>
+            <button class="btn-role" data-player="player2" data-role="traitor">&#9760; Verräter</button>
           </div>
         </div>
 
@@ -65,6 +72,7 @@
     <!-- ── 3. Aktuelle Teams ───────────────────────────────── -->
     <section id="team-section">
       <h3>Aktuelle Teams</h3>
+      <div id="team-winner-banner" class="team-winner-banner hidden"></div>
       <div class="player-columns">
 
         <!-- Spieler 1 -->
@@ -86,6 +94,14 @@
             <div class="team-slot" id="slot-p1-tank">
               <span class="slot-label">&#9876; Tank</span>
               <span class="slot-value empty" id="team-p1-tank">–</span>
+            </div>
+            <div class="team-slot" id="slot-p1-support">
+              <span class="slot-label">&#10022; Support</span>
+              <span class="slot-value empty" id="team-p1-support">–</span>
+            </div>
+            <div class="team-slot" id="slot-p1-traitor">
+              <span class="slot-label">&#9760; Verräter</span>
+              <span class="slot-value empty" id="team-p1-traitor">–</span>
             </div>
           </div>
         </div>
@@ -109,6 +125,14 @@
             <div class="team-slot" id="slot-p2-tank">
               <span class="slot-label">&#9876; Tank</span>
               <span class="slot-value empty" id="team-p2-tank">–</span>
+            </div>
+            <div class="team-slot" id="slot-p2-support">
+              <span class="slot-label">&#10022; Support</span>
+              <span class="slot-value empty" id="team-p2-support">–</span>
+            </div>
+            <div class="team-slot" id="slot-p2-traitor">
+              <span class="slot-label">&#9760; Verräter</span>
+              <span class="slot-value empty" id="team-p2-traitor">–</span>
             </div>
           </div>
         </div>
