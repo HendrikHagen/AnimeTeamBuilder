@@ -8,6 +8,11 @@
  *  - Einmal vergebene Rollen sind gesperrt – kein Überschreiben möglich.
  *  - Nach jeder Zuweisung wechselt die Reihenfolge automatisch.
  *  - Gemeinsamer Pool: ein Charakter kann nur einem der beiden Spieler zugewiesen werden.
+ *
+ * Bildlogik:
+ *  - characters.js bleibt die Primärliste.
+ *  - character-image-sources.js ist die Zwischenschicht mit Wiki-Metadaten.
+ *  - Bilder werden bei Bedarf über die MediaWiki-API des One Piece Wiki geladen.
  */
 
 // ═══════════════════════════════════════════════════════════════
@@ -20,10 +25,14 @@ const state = {
   currentCharacter: null,   // aktuell gezogener Charakter
   currentTurn: "player1",   // wer darf gerade zuweisen: "player1" | "player2"
   teams: {
-    player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
-    player2: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
+    player1: { captain: null, viceCaptain: null, healer: null, tank: null },
+    player2: { captain: null, viceCaptain: null, healer: null, tank: null },
   },
 };
+
+const IMAGE_API_BASE = "https://onepiece.fandom.com/api.php";
+const IMAGE_CACHE = new Map();
+let currentImageRequestToken = 0;
 
 // ═══════════════════════════════════════════════════════════════
 // DOM-REFERENZEN
@@ -51,16 +60,12 @@ const elTeamSlots = {
     viceCaptain: document.getElementById("team-p1-viceCaptain"),
     healer:      document.getElementById("team-p1-healer"),
     tank:        document.getElementById("team-p1-tank"),
-    support:     document.getElementById("team-p1-support"),
-    traitor:     document.getElementById("team-p1-traitor"),
   },
   player2: {
     captain:     document.getElementById("team-p2-captain"),
     viceCaptain: document.getElementById("team-p2-viceCaptain"),
     healer:      document.getElementById("team-p2-healer"),
     tank:        document.getElementById("team-p2-tank"),
-    support:     document.getElementById("team-p2-support"),
-    traitor:     document.getElementById("team-p2-traitor"),
   },
 };
 
@@ -71,16 +76,12 @@ const elSlotContainers = {
     viceCaptain: document.getElementById("slot-p1-viceCaptain"),
     healer:      document.getElementById("slot-p1-healer"),
     tank:        document.getElementById("slot-p1-tank"),
-    support:     document.getElementById("slot-p1-support"),
-    traitor:     document.getElementById("slot-p1-traitor"),
   },
   player2: {
     captain:     document.getElementById("slot-p2-captain"),
     viceCaptain: document.getElementById("slot-p2-viceCaptain"),
     healer:      document.getElementById("slot-p2-healer"),
     tank:        document.getElementById("slot-p2-tank"),
-    support:     document.getElementById("slot-p2-support"),
-    traitor:     document.getElementById("slot-p2-traitor"),
   },
 };
 
@@ -101,7 +102,7 @@ function init() {
     return;
   }
 
-  state.allCharacters = CHARACTERS;
+  state.allCharacters = CHARACTERS.map(enrichCharacter);
   resetRound(/* silent */ true);
 
   elBtnDraw.addEventListener("click", drawRandomCharacter);
@@ -150,7 +151,7 @@ function drawRandomCharacter() {
  *  - Nach erfolgreicher Zuweisung wechselt der Zug.
  *
  * @param {string} player - "player1" | "player2"
- * @param {string} role   - "captain" | "viceCaptain" | "healer" | "tank" | "support" | "traitor"
+ * @param {string} role   - "captain" | "viceCaptain" | "healer" | "tank"
  */
 function assignRole(player, role) {
   if (!state.currentCharacter) {
@@ -204,8 +205,8 @@ function resetRound(silent = false) {
   state.currentTurn         = "player1";
   state.availableCharacters = [...state.allCharacters];
   state.teams = {
-    player1: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
-    player2: { captain: null, viceCaptain: null, healer: null, tank: null, support: null, traitor: null },
+    player1: { captain: null, viceCaptain: null, healer: null, tank: null },
+    player2: { captain: null, viceCaptain: null, healer: null, tank: null },
   };
 
   renderCurrentCharacter();
@@ -225,9 +226,11 @@ function resetRound(silent = false) {
  */
 function renderCurrentCharacter() {
   const char = state.currentCharacter;
+  const requestToken = ++currentImageRequestToken;
 
   if (!char) {
     elCard.classList.add("hidden");
+    resetImagePresentation();
     return;
   }
 
@@ -237,17 +240,7 @@ function renderCurrentCharacter() {
   setMeta(elCharFaction, char.faction ? char.faction        : "");
   setMeta(elCharArc,     char.arc     ? `Arc: ${char.arc}` : "");
 
-  if (char.image) {
-    elCharImage.src = char.image;
-    elCharImage.alt = char.name || "";
-    elCharImage.style.display = "block";
-    elCharImageWrap.classList.remove("no-image");
-  } else {
-    elCharImage.src = "";
-    elCharImage.alt = "";
-    elCharImage.style.display = "none";
-    elCharImageWrap.classList.add("no-image");
-  }
+  renderCharacterImage(char, requestToken);
 }
 
 /**
@@ -291,7 +284,7 @@ function renderRoleSection() {
  */
 function renderTeams() {
   ["player1", "player2"].forEach((player) => {
-    ["captain", "viceCaptain", "healer", "tank", "support", "traitor"].forEach((role) => {
+    ["captain", "viceCaptain", "healer", "tank"].forEach((role) => {
       const char      = state.teams[player][role];
       const el        = elTeamSlots[player][role];
       const container = elSlotContainers[player][role];
@@ -307,6 +300,130 @@ function renderTeams() {
       }
     });
   });
+}
+
+// ═══════════════════════════════════════════════════════════════
+// BILD-FUNKTIONEN
+// ═══════════════════════════════════════════════════════════════
+
+function enrichCharacter(char) {
+  const sourceMeta = getImageSourceMeta(char.id);
+  return {
+    ...char,
+    image: char.image || "",
+    imageSourceMeta: sourceMeta,
+  };
+}
+
+function getImageSourceMeta(characterId) {
+  if (typeof CHARACTER_IMAGE_SOURCES !== "object" || CHARACTER_IMAGE_SOURCES === null) {
+    return null;
+  }
+  return window.CHARACTER_IMAGE_SOURCES[characterId] || null;
+}
+
+async function renderCharacterImage(char, requestToken) {
+  if (char.image) {
+    applyImage(char.image, char.name);
+    return;
+  }
+
+  setImageLoadingState();
+
+  try {
+    const imageUrl = await resolveCharacterImage(char);
+
+    if (requestToken !== currentImageRequestToken) return;
+
+    if (imageUrl) {
+      char.image = imageUrl;
+      applyImage(imageUrl, char.name);
+      return;
+    }
+  } catch (error) {
+    console.warn(`Bild für ${char.name} konnte nicht geladen werden:`, error);
+  }
+
+  if (requestToken !== currentImageRequestToken) return;
+  resetImagePresentation();
+}
+
+async function resolveCharacterImage(char) {
+  if (char.image) return char.image;
+  if (IMAGE_CACHE.has(char.id)) return IMAGE_CACHE.get(char.id);
+
+  const sourceMeta = char.imageSourceMeta;
+  if (!sourceMeta?.wikiTitle) {
+    IMAGE_CACHE.set(char.id, "");
+    return "";
+  }
+
+  const apiUrl = buildPageImageApiUrl(sourceMeta.wikiTitle);
+  const response = await fetch(apiUrl, { mode: "cors", cache: "force-cache" });
+
+  if (!response.ok) {
+    throw new Error(`HTTP ${response.status}`);
+  }
+
+  const data = await response.json();
+  const imageUrl = extractImageUrlFromApiResponse(data);
+  IMAGE_CACHE.set(char.id, imageUrl || "");
+  return imageUrl || "";
+}
+
+function buildPageImageApiUrl(wikiTitle) {
+  const params = new URLSearchParams({
+    action: "query",
+    format: "json",
+    prop: "pageimages",
+    piprop: "original",
+    redirects: "1",
+    titles: wikiTitle,
+    origin: "*",
+  });
+
+  return `${IMAGE_API_BASE}?${params.toString()}`;
+}
+
+function extractImageUrlFromApiResponse(data) {
+  const pages = data?.query?.pages;
+  if (!pages || typeof pages !== "object") return "";
+
+  for (const page of Object.values(pages)) {
+    const originalSource = page?.original?.source;
+    if (typeof originalSource === "string" && originalSource.length > 0) {
+      return originalSource;
+    }
+
+    const thumbnailSource = page?.thumbnail?.source;
+    if (typeof thumbnailSource === "string" && thumbnailSource.length > 0) {
+      return thumbnailSource;
+    }
+  }
+
+  return "";
+}
+
+function setImageLoadingState() {
+  elCharImage.src = "";
+  elCharImage.alt = "";
+  elCharImage.style.display = "none";
+  elCharImageWrap.classList.add("no-image", "is-loading");
+}
+
+function applyImage(src, alt) {
+  elCharImage.src = src;
+  elCharImage.alt = alt || "";
+  elCharImage.style.display = "block";
+  elCharImageWrap.classList.remove("no-image", "is-loading");
+}
+
+function resetImagePresentation() {
+  elCharImage.src = "";
+  elCharImage.alt = "";
+  elCharImage.style.display = "none";
+  elCharImageWrap.classList.remove("is-loading");
+  elCharImageWrap.classList.add("no-image");
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -342,8 +459,6 @@ function getRoleLabel(role) {
     viceCaptain: "Vize-Kapitän",
     healer:      "Heiler",
     tank:        "Tank",
-    support:     "Support",
-    traitor:     "Verräter",
   };
   return labels[role] || role;
 }
